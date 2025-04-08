@@ -31,7 +31,7 @@ A full-stack web application that allows users to create, view, edit, and review
 
 ## 📸 Screenshots
 
-![Home Page, YelpCamp](https://drive.google.com/file/d/1AAUq3zG2prptpxobjNGy5OF2efwcho8c/view?usp=sharing "Home Page")
+![Home Page, YelpCamp](https://drive.google.com/file/d/1Qf5wwhqHs7ZgFE43tX0ED6RKxQaEg3QT/view?usp=sharing)
 
 ---
 
