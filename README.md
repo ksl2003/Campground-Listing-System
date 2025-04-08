@@ -65,4 +65,10 @@ A full-stack web application that allows users to create, view, edit, and review
 
 ## Deployment
 
-- This Project is deployed and hosted via [Render.com]
+- This Project is deployed and hosted via [Render](https://render.com/)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
