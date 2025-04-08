@@ -1,0 +1,11 @@
+/* This contains the all styles that needs to be included in different types of files */
+
+#cluster-map {
+  width: 100%;
+  height: 500px;
+}
+
+#map {
+  width: auto;
+  height: 300px;
+}

@@ -1,0 +1,80 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h1>Form for New Campground</h1>
+    <form
+      class="row g-3 validation-form"
+      action="/campgrounds/new"
+      method="post"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      <div class="col-12">
+        <label for="title" class="form-label"
+          ><b>Title of the Campground</b></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+        />
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+      <div class="col-12">
+        <label for="description" class="form-label"><b>Description</b></label>
+        <textarea
+          name="description"
+          id="description"
+          class="form-control"
+          required
+        ></textarea>
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+      <div class="col-12">
+        <label for="price" class="form-label"><b>Price of Campground</b></label>
+        <input
+          type="number"
+          class="form-control"
+          id="price"
+          name="price"
+          placeholder="Enter in Rupees"
+          required
+        />
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+      <div class="col-12">
+        <label for="location" class="form-label"><b>Location</b></label>
+        <input
+          type="text"
+          class="form-control"
+          id="location"
+          name="location"
+          required
+        />
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+
+      <!-- <div class="col-12">
+        <label for="images" class="form-label">Upload the Image: </label>
+        <input type="file" name="images" id="images" multiple />
+      </div> -->
+      <div class="mb-3 col-12 custom-file">
+        <label for="images" class="form-label custom-file-label"
+          ><b>Upload Images:</b></label
+        >
+        <input
+          class="form-control"
+          type="file"
+          id="images"
+          name="images"
+          multiple
+        />
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Submit New Form</button>
+      </div>
+    </form>
+  </div>
+</div>

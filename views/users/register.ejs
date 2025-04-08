@@ -1,0 +1,71 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container d-flex justify-content-center align-items-center mb-5">
+  <div class="row">
+    <div class="col-md-6 offset-3">
+      <div class="card shadow">
+        <div class="card-body">
+          <img
+            src="https://images.unsplash.com/photo-1742506261388-4f5a6857d6c4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3OXx8fGVufDB8fHx8fA%3D%3D"
+            alt="loginImage"
+            class="card-img-top mb-3"
+          />
+          <div class="col-12">
+            <h2 style="font-family: 'Times New Roman', Times, serif">
+              New User Registration
+            </h2>
+          </div>
+          <form
+            class="row g-3 validation-form"
+            action="/users/register"
+            method="post"
+            novalidate
+          >
+            <div class="col-12">
+              <label for="email" class="form-label"><b>Email</b></label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+              <div class="valid-feedback">Looks Good!</div>
+            </div>
+            <div class="col-12">
+              <label for="username" class="form-label"><b>Username</b></label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                required
+              />
+              <div class="valid-feedback">Looks Good!</div>
+            </div>
+            <div class="col-12">
+              <label for="password" class="form-label"><b>Password</b></label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+              />
+              <div class="valid-feedback">Looks Good!</div>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-success btn-block w-100">
+                Create User
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="row">
+  
+</div> -->

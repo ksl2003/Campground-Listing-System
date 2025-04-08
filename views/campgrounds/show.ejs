@@ -1,0 +1,193 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/stars.css" />
+
+<div class="row">
+  <div class="col-md-5 offset-md-1">
+    <div id="carouselExample" class="carousel slide">
+      <div class="carousel-inner">
+        <% findElement.images.forEach((element,i) => { %>
+        <div class="carousel-item <%= i===0?'active':'' %>">
+          <img
+            src="<%= element.url %>"
+            crossorigin="anonymous"
+            class="d-block w-100"
+            alt="..."
+          />
+        </div>
+        <% }) %>
+      </div>
+      <% if(findElement.images.length>1){ %>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExample"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExample"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+      <% } %>
+    </div>
+
+    <div class="card mb-3" style="width: 100%">
+      <div class="row card-body">
+        <div>
+          <h3><%= findElement.title %></h3>
+          <small class="text-mute"><%= findElement.location %></small>
+          <p class="text-secondary"><%= findElement.description %></p>
+          <p class="text-primary">PRICE: <%= findElement.price %></p>
+        </div>
+      </div>
+      <hr />
+      <div class="row mx-auto">
+        <a class="btn btn-secondary" href="/campgrounds">All Campgrounds</a>
+      </div>
+      <hr />
+      <div class="row mx-auto">
+        <small class="text-mute"
+          >Submitted as <%= findElement.author.username %></small
+        >
+      </div>
+      <hr />
+      <% if(currentUser && findElement.author.equals(currentUser)){ %>
+      <div class="row mx-auto my-auto">
+        <a
+          class="btn btn-primary col-6"
+          href="/campgrounds/<%= findElement._id %>/edit"
+          >Edit Details</a
+        >
+        <form
+          action="/campgrounds/<%= findElement._id%>/delete?_method=DELETE"
+          method="post"
+          class="col-6"
+        >
+          <input
+            class="btn btn-success"
+            type="submit"
+            name="submit"
+            id="submit"
+            value="Delete Obj"
+          />
+        </form>
+      </div>
+      <% } %>
+      <hr style="margin-bottom: 0; margin-top: 1rem" />
+      <div class="card-footer text-muted bg-secondary">2 days ago</div>
+    </div>
+  </div>
+  <div class="col-md-5 offset-md-1">
+    <div id="map"></div>
+    <% if(currentUser){ %>
+    <h2>Leave a Review:</h2>
+    <form
+      action="/campgrounds/<%= findElement._id %>/reviews/new"
+      method="post"
+      class="mb-3 validation-form"
+      novalidate
+    >
+      <!-- <div class="mb-3">
+        <label for="rating" class="form-label">Rating: </label>
+        <span id="presRating">3</span>
+        <input
+          type="range"
+          class="form-range"
+          min="1"
+          max="5"
+          id="rating"
+          name="rating"
+        />
+      </div> -->
+      <div class="mb-3">
+        <fieldset class="starability-basic">
+          <legend>Rating:</legend>
+          <input
+            type="radio"
+            id="no-rate"
+            class="input-no-rate"
+            name="rating"
+            value="0"
+            checked
+            aria-label="No rating."
+          />
+          <input type="radio" id="first-rate1" name="rating" value="1" />
+          <label for="first-rate1" title="Terrible">1 star</label>
+          <input type="radio" id="first-rate2" name="rating" value="2" />
+          <label for="first-rate2" title="Not good">2 stars</label>
+          <input type="radio" id="first-rate3" name="rating" value="3" />
+          <label for="first-rate3" title="Average">3 stars</label>
+          <input type="radio" id="first-rate4" name="rating" value="4" />
+          <label for="first-rate4" title="Very good">4 stars</label>
+          <input type="radio" id="first-rate5" name="rating" value="5" />
+          <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
+      </div>
+
+      <div class="mb-3">
+        <label for="text" class="form-label"><legend>Review:</legend></label>
+        <textarea
+          name="text"
+          id="text"
+          class="form-control"
+          rows="3"
+          cols="30"
+          required
+        ></textarea>
+        <div class="valid-feedback">Looks Good !!!</div>
+      </div>
+      <button class="btn btn-success">Submit</button>
+    </form>
+    <% } %> <% if(findElement.reviews && findElement.reviews.length>0){ %>
+    <hr />
+    <h2>All Reviews</h2>
+    <div class="mb-3">
+      <ul>
+        <% for(let review of findElement.reviews){ %>
+        <div class="card">
+          <li class="card-body">
+            <h5><%= review.author.username %></h5>
+            <p><b>Text: </b><%= review.text %></p>
+            <p class="starability-result" data-rating="<%= review.rating %>">
+              Rated: <%=review.rating %> stars
+            </p>
+            <% if(currentUser && review.author.equals(currentUser)){ %>
+            <form
+              action="/campgrounds/<%= findElement._id %>/reviews/<%= review._id %>?_method=DELETE"
+              method="post"
+            >
+              <button class="btn btn-danger">Delete Review</button>
+            </form>
+            <% } %>
+          </li>
+        </div>
+        <% } %>
+      </ul>
+    </div>
+    <% } %>
+  </div>
+</div>
+<script>
+  let range1 = document.querySelector("#rating");
+  let posn = document.querySelector("#presRating");
+
+  range1.addEventListener("input", () => {
+    let value = parseInt(range1.value);
+    posn.textContent = value;
+  });
+</script>
+
+<script>
+  const maptilerApiKey = "<%- process.env.MAPTILER_API_KEY %>";
+  const campground = <%- JSON.stringify(findElement) %>
+</script>
+<script src="/javascripts/showPageMap.js"></script>
+
+<!-- Extra Elements for other pages-->

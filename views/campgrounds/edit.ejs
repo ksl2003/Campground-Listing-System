@@ -1,0 +1,102 @@
+<% layout('layouts/boilerplate') %>
+
+<style>
+  .img-fluid {
+    width: auto;
+    max-width: 100%;
+  }
+</style>
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h1>Editing Campground</h1>
+    <form
+      class="row g-3 validation-form"
+      action="/campgrounds/<%= findElement._id %>/edit?_method=PUT"
+      method="post"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      <div class="col-12">
+        <label for="title" class="form-label"
+          ><b>Title of the Campground</b></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          value="<%= findElement.title%>"
+          required
+        />
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+      <div class="col-12">
+        <label for="description" class="form-label"><b>Description</b></label>
+        <textarea
+          name="description"
+          id="description"
+          class="form-control"
+          required
+        >
+<%= findElement.description %></textarea
+        >
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+      <div class="col-12">
+        <label for="price" class="form-label"><b>Price of Campground</b></label>
+        <input
+          type="number"
+          class="form-control"
+          id="price"
+          name="price"
+          placeholder="Enter in Rupees"
+          value="<%= findElement.price %>"
+          required
+        />
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+      <div class="col-12">
+        <label for="location" class="form-label"><b>Location</b></label>
+        <input
+          type="text"
+          class="form-control"
+          id="location"
+          name="location"
+          value="<%= findElement.location %>"
+          required
+        />
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+      <div class="mb-3 col-12 custom-file">
+        <label for="images" class="form-label custom-file-label"
+          ><b>Upload Images:</b></label
+        >
+        <input
+          class="form-control"
+          type="file"
+          id="images"
+          name="images"
+          multiple
+        />
+      </div>
+      <% findElement.images.forEach(function (img,i){%>
+
+      <img src="<%=img.thumbnail%>" alt="" class="img-fluid" />
+      <div class="form-check-inline">
+        <input
+          type="checkbox"
+          id="image<%= i %>"
+          name="deleteImgs[]"
+          value="<%= img.filename%>"
+        />
+        <label for="image<%= i %>">Delete Above Image?</label>
+      </div>
+
+      <% }) %>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Submit Details</button>
+      </div>
+    </form>
+    <a href="/campgrounds" class="btn btn-secondary">Back to All Campgrounds</a>
+  </div>
+</div>
