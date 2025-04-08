@@ -23,8 +23,8 @@ const passportLocal = require("passport-local");
 const User = require("./models/user.js");
 const userRoute = require("./routes/user.js");
 const { isLoggedIn, storeReturnTo } = require("./middleware.js");
-// const dbUrl = process.env.DB_URL;
-const dbUrl = "mongodb://127.0.0.1:27017/yelpCampProj";
+const dbUrl = process.env.DB_URL;
+// const dbUrl = "mongodb://127.0.0.1:27017/yelpCampProj";
 // Mongoose Connection Open
 mongoose
   .connect(dbUrl)
