@@ -47,7 +47,7 @@ A full-stack web application that allows users to create, view, edit, and review
    npm install
    ```
 3. **Set up environment variables**
-   Create a `.env` file and add the following:
+   > Create a `.env` file and add the following:
    ```bash
    CLOUDINARY_CLOUD_NAME=your_cloud_name
    CLOUDINARY_KEY=your_api_key
