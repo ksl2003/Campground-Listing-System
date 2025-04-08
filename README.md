@@ -31,7 +31,7 @@ A full-stack web application that allows users to create, view, edit, and review
 
 ## 📸 Screenshots
 
-> _[Insert relevant screenshots of UI, forms, listing views, etc.]_
+> 
 
 ---
 
