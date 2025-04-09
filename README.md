@@ -49,6 +49,8 @@ A full-stack web application that allows users to create, view, edit, and review
    MAPBOX_TOKEN=your_mapbox_token
    DB_URL=your_mongodb_connection_url
    SECRET=session_secret
+   GOOGLE_CLIENT_ID=google-client-ID
+   GOOGLE_CLIENT_SECRET=google-client-secret
    ```
 4. **Run the App**
    ```bash
