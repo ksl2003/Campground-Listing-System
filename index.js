@@ -142,36 +142,30 @@ passport.use(
       callbackURL:
         "https://campground-listing-system.onrender.com/auth/google/callback",
     },
-    async function (accessToken, refreshToken, profile, cb) {
-      try {
-        // Check if a user with the same Google ID already exists
-        let user = await User.findOne({ googleId: profile.id });
+    catchAsync(async function (accessToken, refreshToken, profile, cb) {
+      // Check if a user with the same Google ID already exists
+      let user = await User.findOne({ googleId: profile.id });
+      if (!user) {
+        // If no user with the Google ID exists, check if a user with the same email exists
+        user = await User.findOne({ email: profile.emails[0].value });
 
-        if (!user) {
-          // If no user with the Google ID exists, check if a user with the same email exists
-          user = await User.findOne({ email: profile.emails[0].value });
-
-          if (user) {
-            // If a user with the same email exists, associate the Google ID with the user
-            user.googleId = profile.id;
-            await user.save();
-          } else {
-            // If no user with the same email exists, create a new user
-            user = await User.create({
-              email: profile.emails[0].value,
-              googleId: profile.id,
-              username: profile.emails[0].value, // Optional: Use email as username
-            });
-          }
+        if (user) {
+          // If a user with the same email exists, associate the Google ID with the user
+          user.googleId = profile.id;
+          await user.save();
+        } else {
+          // If no user exists, create a new user
+          user = await User.create({
+            email: profile.emails[0].value,
+            googleId: profile.id,
+            username: profile.emails[0].value,
+          });
         }
-
-        // Log the user in
-        return cb(null, user);
-      } catch (err) {
-        console.error("Error during Google login:", err);
-        return cb(err, null);
       }
-    }
+
+      // Log the user in
+      return cb(null, user);
+    })
   )
 );
 
