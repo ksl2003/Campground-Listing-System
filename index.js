@@ -147,7 +147,7 @@ passport.use(
       console.log("Google Profile:", profile);
       User.findOrCreate(
         { googleId: profile.id },
-        { username: profile.displayName, email: profile.emails[0].value },
+        { username: profile.id, email: profile.emails[0].value },
         function (err, user) {
           return cb(err, user);
         }
