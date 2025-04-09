@@ -1,19 +1,19 @@
 const { required } = require("joi");
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
-const findOrCreate = require("mongoose-findorcreate");
+// const findOrCreate = require("mongoose-findorcreate");
 
 const userSchema = mongoose.Schema({
   email: {
     type: String,
     required: true,
   },
-  gooleId: {
+  googleId: {
     type: String,
   },
 });
 userSchema.plugin(passportLocalMongoose);
-userSchema.plugin(findOrCreate);
+// userSchema.plugin(findOrCreate);
 
 const User = mongoose.model("user", userSchema);
 
