@@ -144,10 +144,10 @@ passport.use(
         "https://campground-listing-system.onrender.com/auth/google/callback",
     },
     function (accessToken, refreshToken, profile, cb) {
-      console.log("Google Profile:", profile);
+      // console.log("Google Profile:", profile);
       User.findOrCreate(
         { googleId: profile.id },
-        { username: profile.id, email: profile.emails[0].value },
+        { username: profile.emails[0].value, email: profile.emails[0].value },
         function (err, user) {
           return cb(err, user);
         }
