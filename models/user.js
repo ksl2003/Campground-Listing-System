@@ -1,6 +1,7 @@
 const { required } = require("joi");
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
+const findOrCreate = require("mongoose-findorcreate");
 
 const userSchema = mongoose.Schema({
   email: {
@@ -12,6 +13,7 @@ const userSchema = mongoose.Schema({
   },
 });
 userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(findOrCreate);
 
 const User = mongoose.model("user", userSchema);
 
