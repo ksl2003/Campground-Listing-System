@@ -7,8 +7,10 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  gooleId: {
+    type: String,
+  },
 });
-
 userSchema.plugin(passportLocalMongoose);
 
 const User = mongoose.model("user", userSchema);

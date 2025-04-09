@@ -24,6 +24,7 @@ const User = require("./models/user.js");
 const userRoute = require("./routes/user.js");
 const { isLoggedIn, storeReturnTo } = require("./middleware.js");
 const dbUrl = process.env.DB_URL;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 // const dbUrl = "mongodb://127.0.0.1:27017/yelpCampProj";
 // Mongoose Connection Open
 mongoose
@@ -133,6 +134,27 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new passportLocal(User.authenticate()));
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/google/callback",
+    },
+    function (accessToken, refreshToken, profile, cb) {
+      console.log("Google Profile:", profile);
+      User.findOrCreate(
+        { googleId: profile.id },
+        { username: profile.displayName, email: profile.emails[0].value },
+        function (err, user) {
+          return cb(err, user);
+        }
+      );
+    }
+  )
+);
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -152,6 +174,31 @@ app.use("/users", userRoute);
 app.get("/", (req, res) => {
   res.render("campgrounds/homePage", { title: "Home Page" });
 });
+
+app.get(
+  "/auth/google",
+  storeReturnTo,
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    failureRedirect: "/users/login",
+  })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/users/login",
+    failureFlash: true,
+  }),
+  (req, res) => {
+    // console.log("Google OAuth callback triggered");
+    // console.log("Authenticated user:", req.user);
+    req.flash("success", "Welcome back!");
+    const redirectUrl = req.session.returnTo || "/campgrounds";
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
+  }
+);
 
 // TOTAL ERROR HANDLING
 
