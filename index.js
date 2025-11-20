@@ -77,22 +77,22 @@ app.use(session(sessionSetup));
 // );
 
 const scriptSrcUrls = [
-  "https://stackpath.bootstrapcdn.com/",
-  "https://kit.fontawesome.com/",
-  "https://cdnjs.cloudflare.com/",
-  "https://cdn.maptiler.com/",
-  "https://cdn.jsdelivr.net/",
+  "https://stackpath.bootstrapcdn.com",
+  "https://kit.fontawesome.com",
+  "https://cdnjs.cloudflare.com",
+  "https://cdn.maptiler.com",
+  "https://cdn.jsdelivr.net",
 ];
 const styleSrcUrls = [
-  "https://kit-free.fontawesome.com/",
-  "https://stackpath.bootstrapcdn.com/",
-  "https://fonts.googleapis.com/",
-  "https://use.fontawesome.com/",
-  "https://cdn.maptiler.com/",
-  "https://cdn.jsdelivr.net/",
-  "https://api.maptiler.com/",
+  "https://kit-free.fontawesome.com",
+  "https://stackpath.bootstrapcdn.com",
+  "https://fonts.googleapis.com",
+  "https://use.fontawesome.com",
+  "https://cdn.maptiler.com",
+  "https://cdn.jsdelivr.net",
+  "https://api.maptiler.com",
 ];
-const connectSrcUrls = ["https://api.maptiler.com/"];
+const connectSrcUrls = ["https://api.maptiler.com"];
 const fontSrcUrls = [];
 app.use(
   helmet.contentSecurityPolicy({
@@ -109,7 +109,7 @@ app.use(
         "data:",
         "https://res.cloudinary.com/dsrzwtd4v/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT!
         "https://images.unsplash.com/",
-        "https://api.maptiler.com/",
+        "https://api.maptiler.com",
       ],
       fontSrc: ["'self'", ...fontSrcUrls],
     },

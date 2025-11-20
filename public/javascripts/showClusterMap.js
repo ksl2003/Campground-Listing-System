@@ -1,12 +1,30 @@
-maptilersdk.config.apiKey = mapToken;
-var map = new maptilersdk.Map({
-  container: "cluster-map",
-  zoom: 0.3,
-  center: [0, 20],
-  style: maptilersdk.MapStyle.DATAVIZ.LIGHT,
-});
+(function () {
+  // Defensive initialization for cluster map
+  try {
+    console.log("MAPTILER KEY (client cluster):", typeof mapToken !== 'undefined' ? mapToken : null);
+    if (typeof maptilersdk === "undefined") {
+      console.error("maptilersdk is not loaded. Cluster map will not initialize.");
+      return;
+    }
+    if (!mapToken) {
+      console.error("Missing MAPTILER_API_KEY (mapToken) on the client. Cluster map will not initialize.");
+      return;
+    }
+    const container = document.getElementById("cluster-map");
+    if (!container) {
+      console.warn("Map container with id 'cluster-map' not found in DOM.");
+      return;
+    }
 
-map.on("load", function () {
+    maptilersdk.config.apiKey = mapToken;
+    var map = new maptilersdk.Map({
+      container: "cluster-map",
+      zoom: 0.3,
+      center: [0, 20],
+      style: maptilersdk.MapStyle.DATAVIZ.LIGHT,
+    });
+
+    map.on("load", function () {
   // add a clustered GeoJSON source for a sample set of earthquakes
   map.addSource("campgrounds", {
     type: "geojson",
@@ -111,4 +129,8 @@ map.on("load", function () {
   map.on("mouseleave", "unclustered-point", function () {
     map.getCanvas().style.cursor = "";
   });
-});
+    });
+  } catch (err) {
+    console.error("Error initializing MapTiler cluster map:", err);
+  }
+})();
