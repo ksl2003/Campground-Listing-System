@@ -146,6 +146,7 @@ passport.use(
           : "http://localhost:3000/auth/google/callback"),
     },
     async function (accessToken, refreshToken, profile, cb) {
+      // console.log("Callback URL used:", process.env.GOOGLE_CALLBACK_URL || (process.env.NODE_ENV === "production" ? "https://campground-listing-system-1.onrender.com/auth/google/callback" : "http://localhost:3000/auth/google/callback"));
       try {
         // Check if a user with the same Google ID already exists
         let user = await User.findOne({ googleId: profile.id });
