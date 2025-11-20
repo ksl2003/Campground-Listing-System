@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== "production") {
 // console.log(process.env.SECRET);
 const express = require("express");
 const app = express();
+app.set("trust proxy", 1); // Trust first proxy (Render)
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const mongoSanitizer = require("express-mongo-sanitize");
@@ -92,7 +93,7 @@ const styleSrcUrls = [
   "https://cdn.jsdelivr.net",
   "https://api.maptiler.com",
 ];
-const connectSrcUrls = ["https://api.maptiler.com"];
+const connectSrcUrls = ["https://api.maptiler.com", "https://cdn.maptiler.com"];
 const fontSrcUrls = [];
 app.use(
   helmet.contentSecurityPolicy({
@@ -183,8 +184,6 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   // Setting global variables
-  res.locals.currentUser = req.user;
-  res.locals.error = req.flash("error");
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
