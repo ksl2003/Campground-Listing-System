@@ -46,7 +46,7 @@ const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,
   crypto: {
-    secret: "thisshouldbeabettersecret!",
+    secret: process.env.SESSION_SECRET || "thisshouldbeabettersecret!",
   },
 });
 
@@ -58,7 +58,7 @@ store.on("error", function (e) {
 const sessionSetup = {
   store,
   name: "session",
-  secret: "thisshouldbeasecret",
+  secret: process.env.SESSION_SECRET || "thisshouldbeasecret",
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -140,7 +140,10 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL:
-        "https://campground-listing-system.onrender.com/auth/google/callback",
+        process.env.GOOGLE_CALLBACK_URL ||
+        (process.env.NODE_ENV === "production"
+          ? "https://campground-listing-system-1.onrender.com/auth/google/callback"
+          : "http://localhost:3000/auth/google/callback"),
     },
     async function (accessToken, refreshToken, profile, cb) {
       try {
@@ -182,7 +185,10 @@ app.use((req, res, next) => {
   // Setting global variables
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
+  res.locals.currentUser = req.user;
+  res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
+  res.locals.mapTilerApiKey = process.env.MAPTILER_API_KEY;
   next();
 });
 //Routers
@@ -237,7 +243,8 @@ app.use((err, req, res, next) => {
 
 // Starting the APP.
 
-app.listen(3000, () => {
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
   // console.log(typeof Campground.schema.obj.price());
-  console.log("Serving from Port 3000...");
+  console.log(`Serving from Port ${port}...`);
 });
