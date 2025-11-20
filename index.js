@@ -242,7 +242,7 @@ app.use((err, req, res, next) => {
 
 // Starting the APP.
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 app.listen(port, () => {
   // console.log(typeof Campground.schema.obj.price());
   console.log(`Serving from Port ${port}...`);
