@@ -21,7 +21,7 @@
       container: "cluster-map",
       zoom: 0.3,
       center: [0, 20],
-      style: maptilersdk.MapStyle.DATAVIZ.LIGHT,
+      style: maptilersdk.MapStyle?.DATAVIZ?.LIGHT || "https://api.maptiler.com/maps/dataviz-light/style.json",
     });
 
     map.on("load", function () {

@@ -20,7 +20,7 @@
 
     const map = new maptilersdk.Map({
       container: "map",
-      style: maptilersdk.MapStyle.STREET,
+      style: maptilersdk.MapStyle?.STREETS || "https://api.maptiler.com/maps/streets/style.json",
       center: campground.geometry.coordinates, // starting position [lng, lat]
       zoom: 10, // starting zoom
     });
