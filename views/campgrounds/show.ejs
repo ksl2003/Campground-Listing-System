@@ -175,13 +175,14 @@
   </div>
 </div>
 <script>
-  let range1 = document.querySelector("#rating");
-  let posn = document.querySelector("#presRating");
+  const range1 = document.querySelector("#rating");
+  const posn = document.querySelector("#presRating");
 
-  range1.addEventListener("input", () => {
-    let value = parseInt(range1.value);
-    posn.textContent = value;
-  });
+  if (range1 && posn) {
+    range1.addEventListener("input", () => {
+      posn.textContent = parseInt(range1.value, 10);
+    });
+  }
 </script>
 
 <script>
