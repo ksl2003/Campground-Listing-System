@@ -1,13 +1,269 @@
 /* This contains the all styles that needs to be included in different types of files */
 
+:root {
+  --forest-950: #14281d;
+  --forest-800: #234936;
+  --forest-600: #3f7256;
+  --moss-400: #8eaa72;
+  --sky-300: #a8ced0;
+  --sun-300: #e8c77d;
+  --sand-100: #f7f3e8;
+  --sand-50: #fcfaf5;
+  --clay-500: #b86545;
+  --ink: #24332a;
+  --muted: #66736a;
+  --line: rgba(35, 73, 54, 0.15);
+  --shadow: 0 12px 32px rgba(28, 53, 39, 0.1);
+}
+
+body {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 8% 8%, rgba(168, 206, 208, 0.32), transparent 30rem),
+    radial-gradient(circle at 92% 18%, rgba(232, 199, 125, 0.28), transparent 26rem),
+    radial-gradient(circle at 82% 90%, rgba(184, 101, 69, 0.15), transparent 30rem),
+    radial-gradient(circle at 18% 82%, rgba(142, 170, 114, 0.2), transparent 28rem),
+    linear-gradient(180deg, var(--sand-50), var(--sand-100));
+  background-attachment: fixed;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+main.container {
+  padding-bottom: 2.5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: var(--forest-950);
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+}
+
+a {
+  color: var(--forest-600);
+}
+
+a:hover {
+  color: var(--forest-800);
+}
+
+.navbar.bg-dark {
+  background: rgba(20, 40, 29, 0.96) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(20, 40, 29, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+.navbar-brand {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.navbar .nav-link {
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.72);
+  padding-inline: 0.85rem !important;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.footer.bg-dark {
+  color: rgba(255, 255, 255, 0.76);
+  background: var(--forest-950) !important;
+  border-top: 3px solid var(--moss-400);
+}
+
+.card {
+  overflow: hidden;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.94),
+    rgba(247, 243, 232, 0.88)
+  );
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.card .card-body {
+  padding: 1.35rem;
+}
+
+.card-img-top,
+.carousel-inner,
+.carousel-item img {
+  border-radius: 0.85rem;
+}
+
+.carousel-item img {
+  object-fit: cover;
+}
+
+.card-footer.bg-secondary {
+  color: var(--muted) !important;
+  background: rgba(142, 170, 114, 0.13) !important;
+  border-top-color: var(--line);
+}
+
+.btn {
+  border-radius: 999px;
+  font-weight: 650;
+  padding: 0.55rem 1rem;
+  transition: transform 160ms ease, box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(28, 53, 39, 0.15);
+}
+
+.btn-primary,
+.btn-success {
+  background-color: var(--forest-600);
+  border-color: var(--forest-600);
+}
+
+.btn-primary:hover,
+.btn-success:hover,
+.btn-primary:focus,
+.btn-success:focus {
+  background-color: var(--forest-800);
+  border-color: var(--forest-800);
+}
+
+.btn-secondary {
+  color: var(--forest-950);
+  background-color: #e6eadc;
+  border-color: #d4dcc8;
+}
+
+.btn-secondary:hover {
+  color: #fff;
+  background-color: var(--forest-800);
+  border-color: var(--forest-800);
+}
+
+.btn-danger {
+  background-color: var(--clay-500);
+  border-color: var(--clay-500);
+}
+
+.form-label,
+legend {
+  color: var(--forest-950);
+  font-weight: 650;
+}
+
+.form-control {
+  color: var(--ink);
+  background-color: rgba(255, 255, 255, 0.88);
+  border-color: rgba(35, 73, 54, 0.22);
+  border-radius: 0.75rem;
+  padding: 0.68rem 0.8rem;
+}
+
+.form-control:focus {
+  border-color: var(--forest-600);
+  box-shadow: 0 0 0 0.22rem rgba(63, 114, 86, 0.15);
+}
+
+.validation-form {
+  padding: 1.25rem;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.82),
+    rgba(232, 199, 125, 0.08)
+  );
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.alert {
+  border: 0;
+  border-left: 4px solid currentColor;
+  border-radius: 0.8rem;
+  box-shadow: 0 8px 20px rgba(28, 53, 39, 0.08);
+}
+
+.text-primary {
+  color: var(--forest-600) !important;
+  font-weight: 700;
+}
+
+.text-secondary,
+.text-muted,
+.text-mute {
+  color: var(--muted) !important;
+}
+
 #cluster-map {
   width: 100%;
   height: 500px;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
 }
 
 #map {
   width: auto;
   height: 300px;
+  margin-bottom: 1.5rem;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.leaflet-control-zoom a,
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  color: var(--ink);
+  background: var(--sand-50);
+}
+
+.leaflet-popup-content p {
+  color: var(--muted);
+}
+
+ol,
+ul {
+  padding-left: 0;
+}
+
+@media (max-width: 767.98px) {
+  #cluster-map {
+    height: 360px;
+  }
+
+  main.container {
+    padding-inline: 1rem;
+  }
+
+  main .offset-3 {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .navbar .nav-link {
+    margin-block: 0.15rem;
+  }
 }
 
 .gsi-material-button {
@@ -17,14 +273,14 @@
   user-select: none;
   -webkit-appearance: none;
   appearance: none;
-  background-color: WHITE;
+  background-color: rgba(255, 255, 255, 0.92);
   background-image: none;
-  border: 1px solid #747775;
-  -webkit-border-radius: 20px;
-  border-radius: 20px;
+  border: 1px solid rgba(35, 73, 54, 0.22);
+  -webkit-border-radius: 999px;
+  border-radius: 999px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  color: #1f1f1f;
+  color: var(--ink);
   cursor: pointer;
   font-family: "Roboto", arial, sans-serif;
   font-size: 14px;

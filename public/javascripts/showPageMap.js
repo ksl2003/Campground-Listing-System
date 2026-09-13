@@ -1,39 +1,42 @@
 (function () {
-  // Defensive initialization: log key and avoid throwing if SDK/key/container missing
   try {
-    console.log("MAPTILER KEY (client):", typeof maptilerApiKey !== 'undefined' ? maptilerApiKey : null);
-    if (typeof maptilersdk === "undefined") {
-      console.error("maptilersdk is not loaded. Map will not initialize.");
-      return;
-    }
-    if (!maptilerApiKey) {
-      console.error("Missing MAPTILER_API_KEY on the client. Map will not initialize.");
-      return;
-    }
     const container = document.getElementById("map");
-    if (!container) {
-      console.warn("Map container with id 'map' not found in DOM.");
+    const dataElement = document.getElementById("campground-data");
+    if (!container || !dataElement || typeof L === "undefined") return;
+
+    const campground = JSON.parse(dataElement.textContent);
+    const coordinates = campground?.geometry?.coordinates;
+    if (
+      !Array.isArray(coordinates) ||
+      coordinates.length < 2 ||
+      !coordinates.every(Number.isFinite)
+    ) {
+      console.error("The campground does not have valid map coordinates.");
       return;
     }
 
-    maptilersdk.config.apiKey = maptilerApiKey;
+    const latLng = [coordinates[1], coordinates[0]];
+    const map = L.map(container).setView(latLng, 10);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
 
-    const map = new maptilersdk.Map({
-      container: "map",
-      style: maptilersdk.MapStyle?.STREETS || "https://api.maptiler.com/maps/streets/style.json",
-      center: campground.geometry.coordinates, // starting position [lng, lat]
-      zoom: 10, // starting zoom
-    });
+    const popup = document.createElement("div");
+    const title = document.createElement("h3");
+    title.textContent = campground.title;
+    const location = document.createElement("p");
+    location.textContent = campground.location;
+    popup.append(title, location);
 
-    new maptilersdk.Marker()
-      .setLngLat(campground.geometry.coordinates)
-      .setPopup(
-        new maptilersdk.Popup({ offset: 25 }).setHTML(
-          `<h3>${campground.title}</h3><p>${campground.location}</p>`
-        )
-      )
+    L.marker(latLng, {
+      title: campground.title,
+      alt: `Location of ${campground.title}`,
+    })
+      .bindPopup(popup)
       .addTo(map);
-  } catch (err) {
-    console.error("Error initializing MapTiler map:", err);
+  } catch (error) {
+    console.error("Error initializing the campground map:", error);
   }
 })();

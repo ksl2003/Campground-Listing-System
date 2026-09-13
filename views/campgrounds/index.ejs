@@ -54,12 +54,6 @@
     </ol>
   </div>
 
-  <script>
-    const mapToken = '<%- mapTilerApiKey %>';
-    const campgrounds = {
-      type: "FeatureCollection",
-      features: <%- JSON.stringify(campgrounds) %>
-    }
-  </script>
+  <script id="campgrounds-data" type="application/json"><%- JSON.stringify(campgrounds).replace(/</g, "\\u003c") %></script>
 
   <script src="/javascripts/showClusterMap.js"></script>

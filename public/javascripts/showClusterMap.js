@@ -1,136 +1,56 @@
 (function () {
-  // Defensive initialization for cluster map
   try {
-    console.log("MAPTILER KEY (client cluster):", typeof mapToken !== 'undefined' ? mapToken : null);
-    if (typeof maptilersdk === "undefined") {
-      console.error("maptilersdk is not loaded. Cluster map will not initialize.");
-      return;
-    }
-    if (!mapToken) {
-      console.error("Missing MAPTILER_API_KEY (mapToken) on the client. Cluster map will not initialize.");
-      return;
-    }
     const container = document.getElementById("cluster-map");
-    if (!container) {
-      console.warn("Map container with id 'cluster-map' not found in DOM.");
-      return;
+    const dataElement = document.getElementById("campgrounds-data");
+    if (!container || !dataElement || typeof L === "undefined") return;
+
+    const campgrounds = JSON.parse(dataElement.textContent);
+    const map = L.map(container, { worldCopyJump: true }).setView([20, 0], 2);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    const markers = L.markerClusterGroup({
+      maxClusterRadius: 50,
+      disableClusteringAtZoom: 15,
+    });
+
+    campgrounds.forEach((campground) => {
+      const coordinates = campground?.geometry?.coordinates;
+      if (
+        !Array.isArray(coordinates) ||
+        coordinates.length < 2 ||
+        !coordinates.every(Number.isFinite)
+      ) {
+        return;
+      }
+
+      const popup = document.createElement("div");
+      const link = document.createElement("a");
+      link.href = `/campgrounds/${encodeURIComponent(campground._id)}`;
+      link.textContent = campground.title;
+      const title = document.createElement("strong");
+      title.appendChild(link);
+      const description = document.createElement("p");
+      const summary = String(campground.description || "");
+      description.textContent = summary.length > 35 ? `${summary.slice(0, 35)}...` : summary;
+      popup.append(title, description);
+
+      markers.addLayer(
+        L.marker([coordinates[1], coordinates[0]], {
+          title: campground.title,
+          alt: `Location of ${campground.title}`,
+        }).bindPopup(popup)
+      );
+    });
+
+    map.addLayer(markers);
+    if (markers.getLayers().length) {
+      map.fitBounds(markers.getBounds(), { padding: [30, 30], maxZoom: 10 });
     }
-
-    maptilersdk.config.apiKey = mapToken;
-    var map = new maptilersdk.Map({
-      container: "cluster-map",
-      zoom: 0.3,
-      center: [0, 20],
-      style: maptilersdk.MapStyle?.DATAVIZ?.LIGHT || "https://api.maptiler.com/maps/dataviz-light/style.json",
-    });
-
-    map.on("load", function () {
-  // add a clustered GeoJSON source for a sample set of earthquakes
-  map.addSource("campgrounds", {
-    type: "geojson",
-    data: campgrounds,
-    cluster: true,
-    clusterMaxZoom: 14, // Max zoom to cluster points on
-    clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
-  });
-
-  map.addLayer({
-    id: "clusters",
-    type: "circle",
-    source: "campgrounds",
-    filter: ["has", "point_count"],
-    paint: {
-      // Use step expressions (https://docs.maptiler.com/gl-style-specification/expressions/#step)
-      // with three steps to implement three types of circles:
-      //   * Blue, 20px circles when point count is less than 100
-      //   * Yellow, 30px circles when point count is between 100 and 750
-      //   * Pink, 40px circles when point count is greater than or equal to 750
-      "circle-color": [
-        "step",
-        ["get", "point_count"],
-        "#51bbd6",
-        10,
-        "#f1f075",
-        30,
-        "#f28cb1",
-      ],
-      "circle-radius": ["step", ["get", "point_count"], 20, 10, 30, 30, 40],
-    },
-  });
-
-  map.addLayer({
-    id: "cluster-count",
-    type: "symbol",
-    source: "campgrounds",
-    filter: ["has", "point_count"],
-    layout: {
-      "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12,
-    },
-  });
-
-  map.addLayer({
-    id: "unclustered-point",
-    type: "circle",
-    source: "campgrounds",
-    filter: ["!", ["has", "point_count"]],
-    paint: {
-      "circle-color": "#11b4da",
-      "circle-radius": 4,
-      "circle-stroke-width": 1,
-      "circle-stroke-color": "#fff",
-    },
-  });
-
-  // inspect a cluster on click
-  map.on("click", "clusters", async function (e) {
-    console.log(e);
-    const features = map.queryRenderedFeatures(e.point, {
-      layers: ["clusters"],
-    });
-    const clusterId = features[0].properties.cluster_id;
-    const zoom = await map
-      .getSource("campgrounds")
-      .getClusterExpansionZoom(clusterId);
-    map.easeTo({
-      center: features[0].geometry.coordinates,
-      zoom,
-    });
-  });
-
-  // When a click event occurs on a feature in
-  // the unclustered-point layer, open a popup at
-  // the location of the feature, with
-  // description HTML from its properties.
-  map.on("click", "unclustered-point", function (e) {
-    var coordinates = e.features[0].geometry.coordinates.slice();
-    var mag = e.features[0].properties.popUp;
-
-    // Ensure that if the map is zoomed out such that
-    // multiple copies of the feature are visible, the
-    // popup appears over the copy being pointed to.
-    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    }
-
-    new maptilersdk.Popup().setLngLat(coordinates).setHTML(mag).addTo(map);
-  });
-
-  map.on("mouseenter", "clusters", function () {
-    map.getCanvas().style.cursor = "pointer";
-  });
-  map.on("mouseleave", "clusters", function () {
-    map.getCanvas().style.cursor = "";
-  });
-  map.on("mouseenter", "unclustered-point", function () {
-    map.getCanvas().style.cursor = "pointer";
-  });
-  map.on("mouseleave", "unclustered-point", function () {
-    map.getCanvas().style.cursor = "";
-  });
-    });
-  } catch (err) {
-    console.error("Error initializing MapTiler cluster map:", err);
+  } catch (error) {
+    console.error("Error initializing the campground cluster map:", error);
   }
 })();

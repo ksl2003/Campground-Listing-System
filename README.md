@@ -9,7 +9,7 @@ A full-stack web application that allows users to create, view, edit, and review
 - ✅ User authentication and authorization (Register/Login/Logout)
 - 📝 Full CRUD operations on campground listings
 - 🖼️ Image upload functionality via Cloudinary
-- 📍 Geocoding and maps integration using Mapbox
+- 📍 Interactive maps using Leaflet, OpenStreetMap tiles, and Nominatim geocoding
 - 💬 Review system with ratings and user ownership control
 - 🔒 Secure session management and input validation
 - 🧰 Modular code structure with MVC architecture
@@ -23,7 +23,8 @@ A full-stack web application that allows users to create, view, edit, and review
 - **Templating**: EJS, EJS-Mate
 - **Authentication**: Passport.js (Local Strategy), express-session
 - **Image Uploads**: Multer, Cloudinary
-- **Geocoding**: Mapbox API
+- **Maps**: Leaflet with OpenStreetMap tiles
+- **Geocoding**: OpenStreetMap Nominatim
 - **Validation & Security**: Joi, Helmet
 - **Others**: Connect-flash, Method-Override
 
@@ -46,7 +47,6 @@ A full-stack web application that allows users to create, view, edit, and review
    CLOUDINARY_CLOUD_NAME=your_cloud_name
    CLOUDINARY_KEY=your_api_key
    CLOUDINARY_SECRET=your_api_secret
-   MAPBOX_TOKEN=your_mapbox_token
    DB_URL=your_mongodb_connection_url
    SECRET=session_secret
    GOOGLE_CLIENT_ID=google-client-ID

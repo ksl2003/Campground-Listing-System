@@ -26,6 +26,11 @@ const userRoute = require("./routes/user.js");
 const { isLoggedIn, storeReturnTo } = require("./middleware.js");
 const dbUrl = process.env.DB_URL;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const googleCallbackUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.GOOGLE_CALLBACK_URL ||
+      "https://campground-listing-system-1.onrender.com/auth/google/callback"
+    : "http://localhost:3000/auth/google/callback";
 // const dbUrl = "mongodb://127.0.0.1:27017/yelpCampProj";
 // Mongoose Connection Open
 mongoose
@@ -81,7 +86,6 @@ const scriptSrcUrls = [
   "https://stackpath.bootstrapcdn.com",
   "https://kit.fontawesome.com",
   "https://cdnjs.cloudflare.com",
-  "https://cdn.maptiler.com",
   "https://cdn.jsdelivr.net",
 ];
 const styleSrcUrls = [
@@ -89,17 +93,14 @@ const styleSrcUrls = [
   "https://stackpath.bootstrapcdn.com",
   "https://fonts.googleapis.com",
   "https://use.fontawesome.com",
-  "https://cdn.maptiler.com",
   "https://cdn.jsdelivr.net",
-  "https://api.maptiler.com",
 ];
-const connectSrcUrls = ["https://api.maptiler.com", "https://cdn.maptiler.com"];
 const fontSrcUrls = [];
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: [],
-      connectSrc: ["'self'", ...connectSrcUrls],
+      connectSrc: ["'self'"],
       scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
       styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
       workerSrc: ["'self'", "blob:"],
@@ -110,7 +111,8 @@ app.use(
         "data:",
         "https://res.cloudinary.com/dsrzwtd4v/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT!
         "https://images.unsplash.com/",
-        "https://api.maptiler.com",
+        "https://cdn.jsdelivr.net",
+        "https://tile.openstreetmap.org",
       ],
       fontSrc: ["'self'", ...fontSrcUrls],
     },
@@ -140,11 +142,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        process.env.GOOGLE_CALLBACK_URL ||
-        (process.env.NODE_ENV === "production"
-          ? "https://campground-listing-system-1.onrender.com/auth/google/callback"
-          : "http://localhost:3000/auth/google/callback"),
+      callbackURL: googleCallbackUrl,
     },
     async function (accessToken, refreshToken, profile, cb) {
       try {
@@ -187,7 +185,6 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
-  res.locals.mapTilerApiKey = process.env.MAPTILER_API_KEY;
   next();
 });
 //Routers

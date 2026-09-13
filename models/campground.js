@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const Review = require("./review.js");
 const User = require("./user.js");
-const { required } = require("joi");
-const { coordinates } = require("@maptiler/client");
 const opts = { toJSON: { virtuals: true } };
 
 const ImageSchema = new mongoose.Schema({
@@ -45,11 +43,6 @@ const campGrSchema = new mongoose.Schema(
   },
   opts
 );
-
-campGrSchema.virtual("properties.popUp").get(function () {
-  return `<strong><a href = /campgrounds/${this._id}>${this.title}</a></strong>
-  <p> ${this.description.substring(0, 35)}....`;
-});
 
 campGrSchema.post("findOneAndDelete", async function (doc) {
   if (doc) {
