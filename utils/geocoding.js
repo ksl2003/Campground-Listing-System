@@ -9,7 +9,7 @@ function scheduleRequest(request) {
   const scheduled = requestQueue.then(async () => {
     const waitTime = Math.max(
       0,
-      REQUEST_INTERVAL_MS - (Date.now() - lastRequestStartedAt)
+      REQUEST_INTERVAL_MS - (Date.now() - lastRequestStartedAt),
     );
     if (waitTime) {
       await new Promise((resolve) => setTimeout(resolve, waitTime));
@@ -25,17 +25,26 @@ function scheduleRequest(request) {
 async function geocodeLocation(location) {
   const query = String(location || "").trim();
   if (!query) {
-    throw new ExpressError("Please provide a location to place on the map.", 400);
+    throw new ExpressError("Please provide a complete location.", 400);
   }
 
   const url = new URL(NOMINATIM_URL);
+
   url.searchParams.set("q", query);
+
   url.searchParams.set("format", "jsonv2");
-  url.searchParams.set("limit", "1");
+
+  url.searchParams.set("limit", "5");
+
+  url.searchParams.set("addressdetails", "1");
+
+  url.searchParams.set("accept-language", "en");
+
+  url.searchParams.set("dedupe", "1");
 
   return scheduleRequest(async () => {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
     try {
       const response = await fetch(url, {
@@ -50,32 +59,45 @@ async function geocodeLocation(location) {
 
       if (!response.ok) {
         throw new ExpressError(
-          "The location service is temporarily unavailable. Please try again.",
-          502
+          "Location service is temporarily unavailable.",
+          502,
         );
       }
 
       const results = await response.json();
       if (!Array.isArray(results) || results.length === 0) {
         throw new ExpressError(
-          `We could not find "${query}". Please enter a more specific location.`,
-          400
+          `No matching location found for "${query}". Please enter a more specific address.`,
+          400,
         );
       }
 
-      const longitude = Number(results[0].lon);
-      const latitude = Number(results[0].lat);
+      const bestResult =
+        results.find(
+          (result) =>
+            result.address &&
+            (result.address.road ||
+              result.address.house_number ||
+              result.address.amenity ||
+              result.address.building),
+        ) || results[0];
+
+      const longitude = Number(bestResult.lon);
+      const latitude = Number(bestResult.lat);
       if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) {
-        throw new ExpressError("The location service returned invalid coordinates.", 502);
+        throw new ExpressError(
+          "Invalid coordinates returned by location service.",
+          502,
+        );
       }
+
+      console.log("Matched location:", bestResult.display_name);
+      console.log("Coordinates:", latitude, longitude);
 
       return { type: "Point", coordinates: [longitude, latitude] };
     } catch (error) {
       if (error instanceof ExpressError) throw error;
-      throw new ExpressError(
-        "The location service could not be reached. Please try again.",
-        502
-      );
+      throw new ExpressError("Unable to retrieve location coordinates.", 502);
     } finally {
       clearTimeout(timeout);
     }
